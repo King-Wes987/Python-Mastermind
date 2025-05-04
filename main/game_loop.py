@@ -21,7 +21,7 @@ class GameLoop():
                 if run_game.on_main_menu:
                     object.button_blitting()
 
-        elif not run_game.game_has_ended:
+        else:
 
             gui_.gameWindow.blit(gui_.background_image_game, (0,0))
 
@@ -44,6 +44,12 @@ class GameLoop():
                 
             if gui_.condition_include_holes:
                 gui_.gameWindow.blit(gui_.show_condition_holes_included, (530, 50))
+
+            if run_game.game_has_ended:
+                x = 0
+                for i in range(4):
+                    x += 54
+                    gui_.gameWindow.blit(run_game.the_code_visual[i], (208 + x, 30))
 
         pygame.display.flip()
         fpsClock.tick(fps)

@@ -42,7 +42,6 @@ cursor_look = pygame.cursors.Cursor()
 
 the_code_visual = [0, 0, 0, 0]
 game_has_ended = False
-game_is_won = False
 
 correct_colour_and_place = 0
 correct_colour_not_place = 0
@@ -90,10 +89,19 @@ def generate_the_code():
 class RunGame():
     
     def new_game():
-        global on_main_menu
-        #print("New Game!")
+        global on_main_menu, selected_pin, selected_pin_alpha, selected_pin_colour_value, the_code, active_guessing_row
+
+        selected_pin = hole_pin
+        selected_pin_alpha = hole_pin
+        selected_pin_colour_value = 0
+        the_code = [0, 0, 0, 0]
+        active_guessing_row = 9
+
+        the_code_visual = [0, 0, 0, 0]
+
         on_main_menu = False
         gui_.gameWindow.blit(gui_.background_image_game, (0,0))
+        pin_creation()
         generate_the_code()
 
 class Pins():
@@ -198,35 +206,37 @@ pin_grid = [[37, 38, 39, 40],
             [5, 6 ,7, 8],
             [1, 2, 3, 4]]
 
-#Normal Pins
-y_coordinate = 60
-row_in_matrix = -1
+def pin_creation():
+    #Normal Pins
+    
+    y_coordinate = 60
+    row_in_matrix = -1
 
-for row in range(10):
+    for row in range(10):
 
-    y_coordinate += 54
-    x_coordinate = 245
-    row_in_matrix += 1
+        y_coordinate += 54
+        x_coordinate = 245
+        row_in_matrix += 1
 
-    for col in range(4):
+        for col in range(4):
 
-        x_coordinate += 54
-        pin_grid[row][col] = Pins(x_coordinate, y_coordinate, hole_pin, row_in_matrix, 0)
+            x_coordinate += 54
+            pin_grid[row][col] = Pins(x_coordinate, y_coordinate, hole_pin, row_in_matrix, 0)
 
-#Scoring Pins
-y_coordinate = 74
-row_in_matrix = -1
+    #Scoring Pins
+    y_coordinate = 74
+    row_in_matrix = -1
 
-for row in range(20):
+    for row in range(20):
 
-    y_coordinate += 27
-    x_coordinate = 189
-    row_in_matrix += 1
+        y_coordinate += 27
+        x_coordinate = 189
+        row_in_matrix += 1
 
-    for col in range(2):
+        for col in range(2):
 
-        x_coordinate += 27
-        scoring_pin_grid[row][col] = Pins(x_coordinate, y_coordinate, score_hole_pin, row_in_matrix, -2, False, True)
+            x_coordinate += 27
+            scoring_pin_grid[row][col] = Pins(x_coordinate, y_coordinate, score_hole_pin, row_in_matrix, -2, False, True)
 
 black_pin_selector = Pins(635, 167, black_pin, alpha_black_pin, 1, True)
 white_pin_selector = Pins(635, 218, white_pin, alpha_white_pin, 2, True)
@@ -243,8 +253,11 @@ selector_pins = [black_pin_selector, white_pin_selector, red_pin_selector,
 
 class CheckAndGradeAnswer:
     def check_and_grade_answer():
-        
-        global active_guessing_row, game_has_ended, game_is_won, correct_colour_and_place, correct_colour_not_place
+        global active_guessing_row, game_has_ended, correct_colour_and_place, correct_colour_not_place, on_main_menu
+
+        if game_has_ended:
+            reset_game()
+            return
 
         hole = [-1, -1, -1, -1]
         
@@ -278,17 +291,23 @@ class CheckAndGradeAnswer:
                         hole[hole_value] = -1
                         temp_code[code_value] = -2
 
-            if active_guessing_row >= 0:
+            if active_guessing_row > 0:
                 
                 """print("----")
                 print("Row " + str(active_guessing_row) + ": ")
                 print("Red: " + str(correct_colour_and_place))
                 print("White " + str(correct_colour_not_place))
                 """
-
                 score_pin_logic()
 
                 active_guessing_row -= 1
+
+            elif active_guessing_row == 0:
+
+                score_pin_logic()
+                if not game_has_ended:
+                    game_is_lost()
+
             else:
                 game_is_lost()
                 #print("Game is finished!!!")
@@ -334,22 +353,16 @@ def validate_user_answer(hole_zero, hole_one, hole_two, hole_three):
     elif gui_.condition_include_duplicates and gui_.condition_include_holes:
 
         return("Valid")
-    
-def game_is_won():
-    global game_has_ended, game_is_won
 
-    Pins.pin_blitting(scoring_pin_grid[active_guessing_row * 2][0])
+def game_is_won():
+    global game_has_ended
+
+    """Pins.pin_blitting(scoring_pin_grid[active_guessing_row * 2][0])
     Pins.pin_blitting(scoring_pin_grid[active_guessing_row * 2][1])
     Pins.pin_blitting(scoring_pin_grid[active_guessing_row * 2 + 1][0])
     Pins.pin_blitting(scoring_pin_grid[active_guessing_row * 2 + 1][1])
-
+    """
     game_has_ended = True
-    game_is_won = True
-
-    x = 0
-    for i in range(4):
-        x += 54
-        gui_.gameWindow.blit(the_code_visual[i], (208 + x, 30))
 
     pygame.display.set_caption("Python: Mastermind - - - CONGRATULATIONS! YOU HAVE FIGURED OUT THE CODE!")
 
@@ -357,19 +370,12 @@ def game_is_won():
     pygame.mixer.music.play(0, 0.0, 100)
     pygame.mixer.music.set_volume(0.5)
     
-
     pygame.mixer.music.queue("../Python Mastermind/res/sound/Title.ogg", "", -1)
 
 def game_is_lost():
-    global game_has_ended, game_is_won
+    global game_has_ended
 
     game_has_ended = True
-    game_is_won = False
-
-    x = 0
-    for i in range(4):
-        x += 54
-        gui_.gameWindow.blit(the_code_visual[i], (208 + x, 30))
 
     pygame.display.set_caption("Python: Mastermind - - - OH DEAR! YOU FAILED TO FIGURE OUT THE CODE! Better luck next time!")
 
@@ -442,3 +448,16 @@ def score_pin_logic():
         scoring_pin_grid[active_guessing_row * 2 + 1][1].image = red_score_pin
 
         game_is_won()
+
+def reset_game():
+    global on_main_menu, game_has_ended, cursor_look
+
+    on_main_menu = True
+    game_has_ended = False
+    cursor_look = pygame.cursors.Cursor()
+    pygame.display.set_caption("Python: Mastermind")
+    
+    pygame.mixer.music.fadeout(500)
+    pygame.mixer.music.load("../Python Mastermind/res/sound/Title.ogg")
+    pygame.mixer.music.play(-1, 0.0, 1000)
+    pygame.mixer.music.set_volume(0.5)
