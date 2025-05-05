@@ -14,6 +14,8 @@ class GameLoop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = False
+            if event.type == run_game.ENDSONG_END:
+                run_game.end_theme_done_playing = True
         
         if run_game.on_main_menu:
             gui_.gameWindow.blit(gui_.backgroun_image_menu, (0, 0))
@@ -36,9 +38,9 @@ class GameLoop():
             for object in run_game.selector_pins:
                 object.pin_blitting()
 
-            for object in gui_.game_buttons:
-                object.button_blitting()
-
+            if not run_game.game_has_ended:
+                gui_.check_answer.button_blitting()
+                
             if gui_.condition_include_duplicates:
                 gui_.gameWindow.blit(gui_.show_condition_duplicates_included, (530, 25))
                 
@@ -50,6 +52,9 @@ class GameLoop():
                 for i in range(4):
                     x += 54
                     gui_.gameWindow.blit(run_game.the_code_visual[i], (208 + x, 30))
+                
+                if run_game.end_theme_done_playing:
+                    gui_.back_to_main_menu_button.button_blitting()
 
         pygame.display.flip()
         fpsClock.tick(fps)

@@ -17,41 +17,44 @@ pygame.mixer.music.set_volume(0.5)
 
 pygame.display.set_caption("Python: Mastermind")
 
-def image_path_aplha(image_name):
+def image_path(image_name):
     return pygame.image.load("../Python Mastermind/res/images/" + str(image_name)).convert_alpha()
 
-backgroun_image_menu = image_path_aplha("OpeningScreen.png")
-background_image_game = image_path_aplha("MasterMindBG2.png")
+backgroun_image_menu = image_path("OpeningScreen.png")
+background_image_game = image_path("MasterMindBG2.png")
 
-plain_start_button = image_path_aplha("PlainStart.png")
-hover_start_button = image_path_aplha("HoverStart.png")
-plain_duplicates_button = image_path_aplha("PlainDuplicates.png")
-hover_duplicates_button = image_path_aplha("HoverDuplicates.png")
-selected_duplicates_button = image_path_aplha("SelectedDuplicates.png")
-plain_holes_included_button = image_path_aplha("PlainHolesIncluded.png")
-hover_holes_included_button = image_path_aplha("HoverHolesIncluded.png")
-selected_holes_included_button = image_path_aplha("SelectedHolesIncluded.png")
+plain_start_button = image_path("PlainStart.png")
+hover_start_button = image_path("HoverStart.png")
+plain_duplicates_button = image_path("PlainDuplicates.png")
+hover_duplicates_button = image_path("HoverDuplicates.png")
+selected_duplicates_button = image_path("SelectedDuplicates.png")
+plain_holes_included_button = image_path("PlainHolesIncluded.png")
+hover_holes_included_button = image_path("HoverHolesIncluded.png")
+selected_holes_included_button = image_path("SelectedHolesIncluded.png")
 
-plain_check_answer = image_path_aplha("PlainScoreAnswerButton.png")
-hover_check_answer = image_path_aplha("HoverScoreAnswerButton.png")
-pressed_check_answer = image_path_aplha("PressedScoreAnswerButton.png")
+plain_back_to_main_menu = image_path("PlainBackToMainMenu.png")
+hover_back_to_main_menu = image_path("HoverBackToMainMenu.png")
 
-show_condition_duplicates_included = image_path_aplha("SelectedDuplicatesSMALL.png")
-show_condition_holes_included = image_path_aplha("SelectedHolesIncludedSMALL.png")
+plain_check_answer = image_path("PlainScoreAnswerButton.png")
+hover_check_answer = image_path("HoverScoreAnswerButton.png")
+pressed_check_answer = image_path("PressedScoreAnswerButton.png")
 
-game_won = image_path_aplha("end_screen/WON.png")
-game_lost = image_path_aplha("end_screen/LOST.png")
+show_condition_duplicates_included = image_path("SelectedDuplicatesSMALL.png")
+show_condition_holes_included = image_path("SelectedHolesIncludedSMALL.png")
 
-number_one = image_path_aplha("end_screen/one.png")
-number_two = image_path_aplha("end_screen/two.png")
-number_three = image_path_aplha("end_screen/three.png")
-number_four = image_path_aplha("end_screen/four.png")
-number_five = image_path_aplha("end_screen/five.png")
-number_six = image_path_aplha("end_screen/six.png")
-number_seven = image_path_aplha("end_screen/seven.png")
-number_eight = image_path_aplha("end_screen/eight.png")
-number_nine = image_path_aplha("end_screen/nine.png")
-number_ten = image_path_aplha("end_screen/ten.png")
+game_won = image_path("end_screen/WON.png")
+game_lost = image_path("end_screen/LOST.png")
+
+number_one = image_path("end_screen/one.png")
+number_two = image_path("end_screen/two.png")
+number_three = image_path("end_screen/three.png")
+number_four = image_path("end_screen/four.png")
+number_five = image_path("end_screen/five.png")
+number_six = image_path("end_screen/six.png")
+number_seven = image_path("end_screen/seven.png")
+number_eight = image_path("end_screen/eight.png")
+number_nine = image_path("end_screen/nine.png")
+number_ten = image_path("end_screen/ten.png")
 
 numbers = [number_ten, number_nine, number_eight, number_seven, number_six,
            number_five, number_four, number_three, number_two, number_one]
@@ -142,3 +145,6 @@ with_holes = Button((screen_width-488)/2, 550,
 check_answer = Button(152, 660, plain_check_answer,
                       hover_check_answer, pressed_check_answer,
                       run_game.CheckAndGradeAnswer.check_and_grade_answer)
+back_to_main_menu_button = Button(199, 650, plain_back_to_main_menu,
+                                  hover_back_to_main_menu, plain_back_to_main_menu,
+                                  run_game.reset_game)

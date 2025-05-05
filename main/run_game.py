@@ -42,6 +42,8 @@ cursor_look = pygame.cursors.Cursor()
 
 the_code_visual = [0, 0, 0, 0]
 game_has_ended = False
+end_theme_done_playing = False
+ENDSONG_END = pygame.USEREVENT + 1
 
 correct_colour_and_place = 0
 correct_colour_not_place = 0
@@ -310,7 +312,6 @@ class CheckAndGradeAnswer:
 
             else:
                 game_is_lost()
-                #print("Game is finished!!!")
 
         else:
             pygame.mixer.music.load("../Python Mastermind/res/sound/Warning.ogg")
@@ -367,6 +368,7 @@ def game_is_won():
     pygame.display.set_caption("Python: Mastermind - - - CONGRATULATIONS! YOU HAVE FIGURED OUT THE CODE!")
 
     pygame.mixer.music.load("../Python Mastermind/res/sound/Victory.ogg")
+    pygame.mixer.music.set_endevent(ENDSONG_END)
     pygame.mixer.music.play(0, 0.0, 100)
     pygame.mixer.music.set_volume(0.5)
     
@@ -380,6 +382,7 @@ def game_is_lost():
     pygame.display.set_caption("Python: Mastermind - - - OH DEAR! YOU FAILED TO FIGURE OUT THE CODE! Better luck next time!")
 
     pygame.mixer.music.load("../Python Mastermind/res/sound/Defeat.ogg")
+    pygame.mixer.music.set_endevent(ENDSONG_END)
     pygame.mixer.music.play(0, 0.0, 100)
     pygame.mixer.music.set_volume(0.5)
 
@@ -450,10 +453,11 @@ def score_pin_logic():
         game_is_won()
 
 def reset_game():
-    global on_main_menu, game_has_ended, cursor_look
+    global on_main_menu, game_has_ended, cursor_look, end_theme_done_playing
 
     on_main_menu = True
     game_has_ended = False
+    end_theme_done_playing = False
     cursor_look = pygame.cursors.Cursor()
     pygame.display.set_caption("Python: Mastermind")
     
