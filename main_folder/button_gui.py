@@ -1,24 +1,29 @@
 import pygame
 import run_game
+import sys, os
 pygame.init()
 
 main_menu_buttons = []
 game_buttons = []
 
-condition_include_duplicates = False
-condition_include_holes = False
-
 screen_width, screen_height = 720, 720
 gameWindow = pygame.display.set_mode((screen_width, screen_height))
 
-pygame.mixer.music.load("../Python Mastermind/res/sound/Title.ogg")
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+pygame.mixer.music.load(resource_path("res/sound/Title.ogg"))
 pygame.mixer.music.play(-1, 0.0, 1000)
 pygame.mixer.music.set_volume(0.5)
 
 pygame.display.set_caption("Python: Mastermind")
 
 def image_path(image_name):
-    return pygame.image.load("../Python Mastermind/res/images/" + str(image_name)).convert_alpha()
+    return pygame.image.load(resource_path("res/images/" + str(image_name))).convert_alpha()
 
 backgroun_image_menu = image_path("OpeningScreen.png")
 background_image_game = image_path("MasterMindBG2.png")
@@ -106,9 +111,9 @@ class Button():
             else:
                 self.alreadyPressed = False
 
-        if condition_include_duplicates and self.plain_image_name == plain_duplicates_button:
+        if run_game.condition_include_duplicates and self.plain_image_name == plain_duplicates_button:
             self.current_button_image = selected_duplicates_button
-        if condition_include_holes and self.plain_image_name == plain_holes_included_button:
+        if run_game.condition_include_holes and self.plain_image_name == plain_holes_included_button:
             self.current_button_image = selected_holes_included_button
 
         gameWindow.blit(self.current_button_image, self.buttonRect)
@@ -119,13 +124,13 @@ def main_start_button():
     pygame.mixer.music.fadeout(3000)
     
 def include_duplicates():
-    global condition_include_duplicates
-    condition_include_duplicates = not condition_include_duplicates
+    #global condition_include_duplicates
+    run_game.condition_include_duplicates = not run_game.condition_include_duplicates
     #print("Duplicates Toggle")
 
 def include_holes():
-    global condition_include_holes
-    condition_include_holes = not condition_include_holes
+    #global condition_include_holes
+    run_game.condition_include_holes = not run_game.condition_include_holes
     #print("Holes Toggle")
 
 #List of created buttons:

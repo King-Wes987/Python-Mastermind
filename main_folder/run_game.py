@@ -1,13 +1,23 @@
 import pygame
-import button_gui as gui_
 import random
+import sys, os
 pygame.init()
 
 on_main_menu = bool(True)
 gameWindow = pygame.display.set_mode((720, 720))
 
+condition_include_duplicates = False
+condition_include_holes = False
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 def image_path_alpha(image_name):
-    return pygame.image.load("../Python Mastermind/res/images/pins/" + str(image_name)).convert_alpha()
+    return pygame.image.load(resource_path("res/images/pins/" + str(image_name))).convert_alpha()
 
 black_pin = image_path_alpha("PinBlack.png")
 blue_pin = image_path_alpha("PinBlue.png")
@@ -58,7 +68,7 @@ def select_pin(pin_name, alpha_pin_name, pin_colour_value):
 def generate_the_code():
     global the_code
     
-    if not gui_.condition_include_duplicates and not gui_.condition_include_holes:
+    if not condition_include_duplicates and not condition_include_holes:
 
         while not ((the_code[0] != the_code[1] != the_code[2] != the_code[3]) and
                    (the_code[0] != the_code[3] != the_code[1]) and
@@ -67,13 +77,13 @@ def generate_the_code():
                 the_code[i] = random.randint(1, 8)
             #print("Choice: " + str(the_code))
             
-    elif gui_.condition_include_duplicates and not gui_.condition_include_holes:
+    elif condition_include_duplicates and not condition_include_holes:
 
         for i in range(4):
             the_code[i] = random.randint(1, 8)
         #print("Choice: " + str(the_code))
 
-    elif not gui_.condition_include_duplicates and gui_.condition_include_holes:
+    elif not condition_include_duplicates and condition_include_holes:
 
         while not ((the_code[0] != the_code[1] != the_code[2] != the_code[3]) and
                    (the_code[0] != the_code[3] != the_code[1]) and
@@ -82,7 +92,7 @@ def generate_the_code():
                 the_code[i] = random.randint(0, 8)
             #print("Choice: " + str(the_code))
                 
-    elif gui_.condition_include_duplicates and gui_.condition_include_holes:
+    elif condition_include_duplicates and condition_include_holes:
 
         for i in range(4):
             the_code[i] = random.randint(0, 8)
@@ -99,10 +109,7 @@ class RunGame():
         the_code = [0, 0, 0, 0]
         active_guessing_row = 9
 
-        the_code_visual = [0, 0, 0, 0]
-
         on_main_menu = False
-        gui_.gameWindow.blit(gui_.background_image_game, (0,0))
         pin_creation()
         generate_the_code()
 
@@ -158,7 +165,7 @@ class Pins():
         if self.scorePin:
             self.current_pin_image = self.image
 
-        gui_.gameWindow.blit(self.current_pin_image, self.buttonRect)    
+        gameWindow.blit(self.current_pin_image, self.buttonRect)    
 
 def mouse_hovers(self):
     if self.colourSelectPin:
@@ -270,7 +277,7 @@ class CheckAndGradeAnswer:
 
         if validate_user_answer(hole[0], hole[1], hole[2], hole[3]) == "Valid":
 
-            pygame.mixer.music.load("../Python Mastermind/res/sound/Score.ogg")
+            pygame.mixer.music.load(resource_path("res/sound/Score.ogg"))
             pygame.mixer.music.play(0, 0.0, 100)
 
             temp_code = [-2, -2, -2, -2]
@@ -314,13 +321,13 @@ class CheckAndGradeAnswer:
                 game_is_lost()
 
         else:
-            pygame.mixer.music.load("../Python Mastermind/res/sound/Warning.ogg")
+            pygame.mixer.music.load(resource_path("res/sound/Warning.ogg"))
             pygame.mixer.music.play(0, 0.0, 100)
 
 def validate_user_answer(hole_zero, hole_one, hole_two, hole_three):
     hole_test = [hole_zero, hole_one, hole_two, hole_three]
 
-    if not gui_.condition_include_duplicates and not gui_.condition_include_holes:
+    if not condition_include_duplicates and not condition_include_holes:
 
         if ((hole_test[0] != hole_test[1] != hole_test[2] != hole_test[3]) and
             (hole_test[0] != hole_test[3] != hole_test[1]) and
@@ -334,7 +341,7 @@ def validate_user_answer(hole_zero, hole_one, hole_two, hole_three):
         else:
             return("Invalid")
             
-    elif gui_.condition_include_duplicates and not gui_.condition_include_holes:
+    elif condition_include_duplicates and not condition_include_holes:
 
         for i in range(4):
             if hole_test[i] == 0:
@@ -342,7 +349,7 @@ def validate_user_answer(hole_zero, hole_one, hole_two, hole_three):
         else:
             return("Valid")
 
-    elif not gui_.condition_include_duplicates and gui_.condition_include_holes:
+    elif not condition_include_duplicates and condition_include_holes:
 
         if ((hole_test[0] != hole_test[1] != hole_test[2] != hole_test[3]) and
                    (hole_test[0] != hole_test[3] != hole_test[1]) and
@@ -351,7 +358,7 @@ def validate_user_answer(hole_zero, hole_one, hole_two, hole_three):
         else:
             return("Invalid")   
                 
-    elif gui_.condition_include_duplicates and gui_.condition_include_holes:
+    elif condition_include_duplicates and condition_include_holes:
 
         return("Valid")
 
@@ -367,12 +374,12 @@ def game_is_won():
 
     pygame.display.set_caption("Python: Mastermind - - - CONGRATULATIONS! YOU HAVE FIGURED OUT THE CODE!")
 
-    pygame.mixer.music.load("../Python Mastermind/res/sound/Victory.ogg")
+    pygame.mixer.music.load(resource_path("res/sound/Victory.ogg"))
     pygame.mixer.music.set_endevent(ENDSONG_END)
     pygame.mixer.music.play(0, 0.0, 100)
     pygame.mixer.music.set_volume(0.5)
     
-    pygame.mixer.music.queue("../Python Mastermind/res/sound/Title.ogg", "", -1)
+    pygame.mixer.music.queue(resource_path("res/sound/Title.ogg"), "", -1)
 
 def game_is_lost():
     global game_has_ended
@@ -381,12 +388,12 @@ def game_is_lost():
 
     pygame.display.set_caption("Python: Mastermind - - - OH DEAR! YOU FAILED TO FIGURE OUT THE CODE! Better luck next time!")
 
-    pygame.mixer.music.load("../Python Mastermind/res/sound/Defeat.ogg")
+    pygame.mixer.music.load(resource_path("res/sound/Defeat.ogg"))
     pygame.mixer.music.set_endevent(ENDSONG_END)
     pygame.mixer.music.play(0, 0.0, 100)
     pygame.mixer.music.set_volume(0.5)
 
-    pygame.mixer.music.queue("../Python Mastermind/res/sound/DownbeatTitle.ogg", "", -1)
+    pygame.mixer.music.queue(resource_path("res/sound/DownbeatTitle.ogg"), "", -1)
 
 """Due to the complexity of scoring in Mastermind,
    I decided to manually place the pins by finding
@@ -462,6 +469,6 @@ def reset_game():
     pygame.display.set_caption("Python: Mastermind")
     
     pygame.mixer.music.fadeout(500)
-    pygame.mixer.music.load("../Python Mastermind/res/sound/Title.ogg")
+    pygame.mixer.music.load(resource_path("res/sound/Title.ogg"))
     pygame.mixer.music.play(-1, 0.0, 1000)
     pygame.mixer.music.set_volume(0.5)

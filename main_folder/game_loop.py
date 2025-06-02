@@ -41,10 +41,10 @@ class GameLoop():
             if not run_game.game_has_ended:
                 gui_.check_answer.button_blitting()
                 
-            if gui_.condition_include_duplicates:
+            if run_game.condition_include_duplicates:
                 gui_.gameWindow.blit(gui_.show_condition_duplicates_included, (530, 25))
                 
-            if gui_.condition_include_holes:
+            if run_game.condition_include_holes:
                 gui_.gameWindow.blit(gui_.show_condition_holes_included, (530, 50))
 
             if run_game.game_has_ended:
